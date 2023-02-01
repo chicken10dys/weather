@@ -1,7 +1,8 @@
-import requests, json
+import requests, json, os
 
-import requests
 # check if json exists and if not create it
+endpoint = 'https://api.openweathermap.org/data/2.5/weather'
+running = True
 try:
     with open('config.json', 'r') as file:
         config = json.load(file)
@@ -30,31 +31,55 @@ else:
     # opening the file in write mode
     with open('config.json', 'w') as file:
         json.dump(config, file)
+while running == True:
+    print("\n1: edit API key")
+    print("2: check weather")
+    print("3: delete all user data (this will not affect OpenWeatherMap)")
+    print("4: exit")
+    selection = int(input())
+    if selection == 1:
+        api_key = input("Enter your OpenWeatherMap API key\n")
+        config = {'Key': api_key}
+        # opening the file in write mode
+        with open('config.json', 'w') as file:
+            json.dump(config, file)
 
-endpoint = 'https://api.openweathermap.org/data/2.5/weather'
+    elif selection == 2:
+        city = input("Enter your city: ")
 
-city = input("Enter your city: ")
+        response = requests.get(endpoint, params={'appid': api_key, 'q': city, 'units': 'metric'})
 
-response = requests.get(endpoint, params={'appid': api_key, 'q': city, 'units': 'metric'})
+        if response.status_code == 200:
+            # Retrieve data
+            weatherData = response.json()
 
-if response.status_code == 200:
-    # Retrieve data
-    weatherData = response.json()
+            if 'main' in weatherData:
+                # Access specific weatherData points
+                temperature = weatherData['main']['temp']
+                humidity = weatherData['main']['humidity']
 
-    if 'main' in weatherData:
-        # Access specific weatherData points
-        temperature = weatherData['main']['temp']
-        humidity = weatherData['main']['humidity']
-
-        print("\n")
-        if (int)(temperature) <= 0:
-            print(f'Temperature: {temperature}°C' + " ❄️❄️❄️")
-        elif (int)(temperature) > 0:
-            print(f'Temperature: {temperature}°C' + " ☀️☀️☀️")
+                print("\n")
+                if (int)(temperature) <= 0:
+                    print(f'Temperature: {temperature}°C' + " ❄️❄️❄️")
+                elif (int)(temperature) > 0:
+                    print(f'Temperature: {temperature}°C' + " ☀️☀️☀️")
+                else:
+                    print(f'Temperature: {temperature}°C')
+                print(f'Humidity: {humidity}%')
+            else:
+                print("City not found.")
         else:
-            print(f'Temperature: {temperature}°C')
-        print(f'Humidity: {humidity}%')
+            print("Request failed:", response.status_code, response.text)
+
+    elif selection == 3:
+        config = open("config.json", "w")
+        config.write("{}")
+        config.close()
+        with open('config.json', 'r') as file:
+            config = json.load(file)
+
+    elif selection == 4:
+        exit()
+
     else:
-        print("City not found.")
-else:
-    print("Request failed:", response.status_code, response.text)
+        print("Invalid input")
