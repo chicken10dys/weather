@@ -12,6 +12,7 @@ def clear():
 
 endpoint = 'https://api.openweathermap.org/data/2.5/weather'
 running = True
+selection = 0
 
 clear()
 
@@ -48,13 +49,14 @@ else:
     with open('config.json', 'w') as file:
         json.dump(config, file)
 
-while running:
-    print("\n1: edit API key")
-    print("2: check weather")
-    print("3: delete all user data (this will not affect OpenWeatherMap)")
-    print("4: exit")
-    selection = int(input())
-    if selection == 1:
+while True:
+    if selection == 0:
+        print("\n1: Edit API key")
+        print("2: Check weather")
+        print("3: Delete all user data (this will not affect OpenWeatherMap)")
+        print("4: Exit")
+        selection = int(input())
+    elif selection == 1:
         api_key = input("Enter your OpenWeatherMap API key\n")
         config = {'Key': api_key}
         # opening the file in write mode
@@ -64,6 +66,7 @@ while running:
     elif selection == 2:
         city = input("Enter your city: ")
         getWeather.run(endpoint, api_key, city, clear)
+
         def countdown(t):
             while t:
                 mins, secs = divmod(t, 60)
@@ -71,13 +74,13 @@ while running:
                 print(timeformat, end='\r')
                 time.sleep(1)
                 t -= 1
+
             print('Refreshed!')
             t = 10
             getWeather.run(endpoint, api_key, city, clear)
             countdown(t)
         t = 10
         countdown(t)
-
 
     elif selection == 3:
         config = open("config.json", "w")
