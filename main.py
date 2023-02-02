@@ -1,10 +1,17 @@
-import requests, json, os
+import json
+import os
+import requests
+import time
+
 
 def clear():
-    os.system('cls' if os.name=='nt' else 'clear')
+    os.system('cls' if os.name == 'nt' else 'clear')
+
 
 endpoint = 'https://api.openweathermap.org/data/2.5/weather'
 running = True
+
+clear()
 
 # check if json exists and if not create it
 try:
@@ -29,13 +36,17 @@ except json.JSONDecodeError as e:
 if 'Key' in config:
     api_key = config['Key']
 else:
-    print("Looks like this is your first time or your config.json is missing\nIf you do not have a key go to https://home.openweathermap.org/users/sign_up, sign up, click \"API keys\", and copy your key. It may take a while for your key to activate\n")
+    print(
+        "Looks like this is your first time or your config.json is missing\nIf you do not have a key go to "
+        "https://home.openweathermap.org/users/sign_up, sign up, click \"API keys\", and copy your key. It may take a "
+        "while for your key to activate\n")
     api_key = input("Enter your OpenWeatherMap API key\n")
     config = {'Key': api_key}
     # opening the file in write mode
     with open('config.json', 'w') as file:
         json.dump(config, file)
-while running == True:
+
+while running:
     print("\n1: edit API key")
     print("2: check weather")
     print("3: delete all user data (this will not affect OpenWeatherMap)")
@@ -70,16 +81,16 @@ while running == True:
                 print(f'{name}')
                 print(f'{description}')
                 print("")
-                if (int)(temperature) <= 0:
+                if int(temperature) <= 0:
                     print(f'Temperature: {temperature}°C' + " ❄️❄️❄️")
-                elif (int)(temperature) > 0:
+                elif int(temperature) > 0:
                     print(f'Temperature: {temperature}°C' + " ☀️☀️☀️")
                 else:
                     print(f'Temperature: {temperature}°C')
 
-                if (int)(feels) <= 0:
+                if int(feels) <= 0:
                     print(f'Feels like: {feels}°C' + " ❄️❄️❄️")
-                elif (int)(feels) > 0:
+                elif int(feels) > 0:
                     print(f'Feels like: {feels}°C' + " ☀️☀️☀️")
                 else:
                     print(f'Feels like: {feels}°C')
@@ -100,6 +111,7 @@ while running == True:
             config = json.load(file)
 
     elif selection == 4:
+        clear()
         exit()
 
     else:
