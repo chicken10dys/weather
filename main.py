@@ -3,6 +3,8 @@ import os
 import requests
 import time
 
+import getWeather
+
 
 def clear():
     os.system('cls' if os.name == 'nt' else 'clear')
@@ -61,47 +63,21 @@ while running:
 
     elif selection == 2:
         city = input("Enter your city: ")
+        getWeather.run(endpoint, api_key, city, clear)
+        def countdown(t):
+            while t:
+                mins, secs = divmod(t, 60)
+                timeformat = '{:02d}:{:02d}'.format(mins, secs)
+                print(timeformat, end='\r')
+                time.sleep(1)
+                t -= 1
+            print('Refreshed!')
+            t = 10
+            getWeather.run(endpoint, api_key, city, clear)
+            countdown(t)
+        t = 10
+        countdown(t)
 
-        response = requests.get(endpoint, params={'appid': api_key, 'q': city, 'units': 'metric'})
-
-        if response.status_code == 200:
-            # Retrieve data
-            weatherData = response.json()
-
-            if 'main' in weatherData:
-                # Access specific weatherData points
-                name = weatherData['name']
-                description = weatherData['weather'][0]['description']
-                temperature = weatherData['main']['temp']
-                feels = weatherData['main']['feels_like']
-                humidity = weatherData['main']['humidity']
-
-                clear()
-
-                print(f'{name}')
-                print(f'{description}')
-                print("")
-                if int(temperature) <= 0:
-                    print(f'Temperature: {temperature}°C' + " ❄️❄️❄️")
-                elif int(temperature) > 0:
-                    print(f'Temperature: {temperature}°C' + " ☀️☀️☀️")
-                else:
-                    print(f'Temperature: {temperature}°C')
-
-                if int(feels) <= 0:
-                    print(f'Feels like: {feels}°C' + " ❄️❄️❄️")
-                elif int(feels) > 0:
-                    print(f'Feels like: {feels}°C' + " ☀️☀️☀️")
-                else:
-                    print(f'Feels like: {feels}°C')
-
-                print("")
-                print(f'Humidity: {humidity}%')
-
-            else:
-                print("City not found.")
-        else:
-            print("Request failed:", response.status_code, response.text)
 
     elif selection == 3:
         config = open("config.json", "w")
