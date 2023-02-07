@@ -3,6 +3,7 @@ import os
 import requests
 import time
 
+import getLocation
 import getWeather
 
 
@@ -52,9 +53,10 @@ else:
 while True:
     if selection == 0:
         print("\n1: Edit API key")
-        print("2: Check weather")
-        print("3: Delete all user data (this will not affect OpenWeatherMap)")
-        print("4: Exit")
+        print("2: Check weather (auto detect city)")
+        print("3: Check weather (enter city)")
+        print("4: Delete all user data (this will not affect OpenWeatherMap)")
+        print("5: Exit")
         selection = int(input())
     elif selection == 1:
         api_key = input("Enter your OpenWeatherMap API key\n")
@@ -64,6 +66,26 @@ while True:
             json.dump(config, file)
 
     elif selection == 2:
+        city = getLocation.run()
+        getWeather.run(endpoint, api_key, city, clear)
+        def countdown(t):
+            while t:
+                mins, secs = divmod(t, 60)
+                timeformat = '{:02d}:{:02d}'.format(mins, secs)
+                print(timeformat, end='\r')
+                time.sleep(1)
+                t -= 1
+
+            print('Refreshed!')
+            t = 10
+            getWeather.run(endpoint, api_key, city, clear)
+            countdown(t)
+
+
+        t = 10
+        countdown(t)
+
+    elif selection == 3:
         city = input("Enter your city: ")
         getWeather.run(endpoint, api_key, city, clear)
 
@@ -82,14 +104,14 @@ while True:
         t = 10
         countdown(t)
 
-    elif selection == 3:
+    elif selection == 4:
         config = open("config.json", "w")
         config.write("{}")
         config.close()
         with open('config.json', 'r') as file:
             config = json.load(file)
 
-    elif selection == 4:
+    elif selection == 5:
         clear()
         exit()
 
