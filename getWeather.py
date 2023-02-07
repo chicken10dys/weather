@@ -1,4 +1,5 @@
 import requests
+import time
 
 def run(endpoint, api_key, city, clear):
     response = requests.get(endpoint, params={'appid': api_key, 'q': city, 'units': 'metric'})
@@ -41,3 +42,20 @@ def run(endpoint, api_key, city, clear):
             print("City not found.")
     else:
         print("Request failed:", response.status_code, response.text)
+
+def loop(endpoint, api_key, city, clear):
+    def countdown(t):
+        while t:
+            mins, secs = divmod(t, 60)
+            timeformat = '{:02d}:{:02d}'.format(mins, secs)
+            print(timeformat, end='\r')
+            time.sleep(1)
+            t -= 1
+
+        print('Refreshed!')
+        t = 10
+        run(endpoint, api_key, city, clear)
+        countdown(t)
+
+    t = 10
+    countdown(t)

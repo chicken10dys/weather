@@ -1,7 +1,5 @@
 import json
 import os
-import requests
-import time
 
 import getLocation
 import getWeather
@@ -68,41 +66,12 @@ while True:
     elif selection == 2:
         city = getLocation.run()
         getWeather.run(endpoint, api_key, city, clear)
-        def countdown(t):
-            while t:
-                mins, secs = divmod(t, 60)
-                timeformat = '{:02d}:{:02d}'.format(mins, secs)
-                print(timeformat, end='\r')
-                time.sleep(1)
-                t -= 1
-
-            print('Refreshed!')
-            t = 10
-            getWeather.run(endpoint, api_key, city, clear)
-            countdown(t)
-
-
-        t = 10
-        countdown(t)
+        getWeather.loop(endpoint, api_key, city, clear)
 
     elif selection == 3:
         city = input("Enter your city: ")
         getWeather.run(endpoint, api_key, city, clear)
-
-        def countdown(t):
-            while t:
-                mins, secs = divmod(t, 60)
-                timeformat = '{:02d}:{:02d}'.format(mins, secs)
-                print(timeformat, end='\r')
-                time.sleep(1)
-                t -= 1
-
-            print('Refreshed!')
-            t = 10
-            getWeather.run(endpoint, api_key, city, clear)
-            countdown(t)
-        t = 10
-        countdown(t)
+        getWeather.loop(endpoint, api_key, city, clear)
 
     elif selection == 4:
         config = open("config.json", "w")
