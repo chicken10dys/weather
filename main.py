@@ -50,6 +50,7 @@ else:
 
 while True:
     if selection == 0:
+        clear()
         print("\n1: Edit API key")
         print("2: Check weather (auto detect city)")
         print("3: Check weather (enter city)")
@@ -66,12 +67,16 @@ while True:
     elif selection == 2:
         city = getLocation.run()
         getWeather.run(endpoint, api_key, city, clear)
-        getWeather.loop(endpoint, api_key, city, clear)
+        t = 10
+        getWeather.loop(endpoint, api_key, city, clear, t)
+        selection = 0
 
     elif selection == 3:
         city = input("Enter your city: ")
         getWeather.run(endpoint, api_key, city, clear)
-        getWeather.loop(endpoint, api_key, city, clear)
+        t = 10
+        getWeather.loop(endpoint, api_key, city, clear, t)
+        selection = 0
 
     elif selection == 4:
         config = open("config.json", "w")

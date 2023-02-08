@@ -43,8 +43,8 @@ def run(endpoint, api_key, city, clear):
     else:
         print("Request failed:", response.status_code, response.text)
 
-def loop(endpoint, api_key, city, clear):
-    def countdown(t):
+def loop(endpoint, api_key, city, clear, t):
+    try:
         while t:
             mins, secs = divmod(t, 60)
             timeformat = '{:02d}:{:02d}'.format(mins, secs)
@@ -55,7 +55,10 @@ def loop(endpoint, api_key, city, clear):
         print('Refreshed!')
         t = 10
         run(endpoint, api_key, city, clear)
-        countdown(t)
+        loop(endpoint, api_key, city, clear, t)
+    except KeyboardInterrupt:
+        print("Exiting loop...")
 
-    t = 10
-    countdown(t)
+
+
+
