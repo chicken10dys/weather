@@ -1,9 +1,10 @@
+# THIS FILE MAY BE REMOVED AND IS NOT NEEDED
+
 import requests
-import json
 endpoint = 'https://am.i.mullvad.net/json'
-def run():
-    response = requests.get(endpoint)
-    data = response.json()
-    city = data['city']
+def run(lat, lon):
+    response = requests.get(endpoint).json()
+    city = response['city']
+    lat = response['latitude']
+    lon = response['longitude']
     return city
-run()
