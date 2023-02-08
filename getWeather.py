@@ -55,6 +55,7 @@ def loop(endpoint, api_key, city, clear, t):
         print('Refreshed!')
         t = 10
         run(endpoint, api_key, city, clear)
+        print("\nTo go back press \"CTRL\" + C")
         loop(endpoint, api_key, city, clear, t)
     except KeyboardInterrupt:
         print("Exiting loop...")

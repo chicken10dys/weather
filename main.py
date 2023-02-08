@@ -67,6 +67,7 @@ while True:
     elif selection == 2:
         city = getLocation.run()
         getWeather.run(endpoint, api_key, city, clear)
+        print("\nTo exit press \"CTRL\" + C")
         t = 10
         getWeather.loop(endpoint, api_key, city, clear, t)
         selection = 0
@@ -74,6 +75,7 @@ while True:
     elif selection == 3:
         city = input("Enter your city: ")
         getWeather.run(endpoint, api_key, city, clear)
+        print("\nTo go back press \"CTRL\" + C")
         t = 10
         getWeather.loop(endpoint, api_key, city, clear, t)
         selection = 0
