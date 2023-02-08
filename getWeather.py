@@ -1,10 +1,10 @@
 import requests
 import time
 
-def run(endpoint, api_key, city, lat, lon, clear, selection):
-    if selection ==2:
+def run(endpoint, api_key, city, lat, lon, clear, selection, AUTO, MANUAL):
+    if selection == AUTO or selection == 0:
         response = requests.get(endpoint, params={'appid': api_key, 'lat': lat, 'lon': lon, 'units': 'metric'})
-    if selection == 3:
+    if selection == MANUAL:
         response = requests.get(endpoint, params={'appid': api_key, 'q': city, 'units': 'metric'})
 
     if response.status_code == 200:
@@ -46,7 +46,7 @@ def run(endpoint, api_key, city, lat, lon, clear, selection):
     else:
         print("Request failed:", response.status_code, response.text)
 
-def loop(endpoint, api_key, city, lat, lon, clear, selection, t):
+def loop(endpoint, api_key, city, lat, lon, clear, selection, AUTO, MANUAL, t):
     try:
         while t:
             mins, secs = divmod(t, 60)
@@ -57,9 +57,9 @@ def loop(endpoint, api_key, city, lat, lon, clear, selection, t):
 
         print('Refreshed!')
         t = 10
-        run(endpoint, api_key, city, lat, lon, clear, selection)
+        run(endpoint, api_key, city, lat, lon, clear, selection, AUTO, MANUAL)
         print("\nTo go back press \"CTRL\" + C")
-        loop(endpoint, api_key, city, lat, lon, clear, selection, t)
+        loop(endpoint, api_key, city, lat, lon, clear, selection, AUTO, MANUAL, t)
     except KeyboardInterrupt:
         print("Exiting loop...")
 
